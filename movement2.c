@@ -5,7 +5,18 @@
 #define HEIGHT 600
 #define DELAY 3000
 
+void prepare(SDL_Renderer* renderer) {
+    SDL_SetRenderDrawColor(renderer, 30, 30, 30, 255); 
+    // ^ fills the next line of code with what needs to be rendered.
+    SDL_RenderClear(renderer);
+    // ^ fills the background with grey, since line 9
+}
 
+void draw(SDL_Renderer* renderer, SDL_Rect rect) {
+    SDL_SetRenderDrawColor( renderer, 255, 255, 255, 0xFF );
+    SDL_RenderFillRect( renderer, &rect);
+    SDL_RenderPresent(renderer);
+}
 
 int main(int argc, char **argv) {
 
@@ -24,25 +35,38 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    
-    
     SDL_Renderer* renderer = NULL;
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    SDL_SetRenderDrawColor( renderer, 255, 0, 0, 255 );
 
+    prepare(renderer);
+    SDL_RenderPresent(renderer);
+
+    
+
+    SDL_Delay(DELAY / 4);
 
     SDL_Rect rectangle = {
-        rectangle.x = 10,
-        rectangle.y = 10,
-        rectangle.w = 32,
-        rectangle.h = 32,
+        .x = 50,
+        .y = 50,
+        .w = 32,
+        .h = 32,
     };
     
-    SDL_Rect* ptr = &rectangle;
-    
-    SDL_RenderDrawRect(renderer, ptr);
+    draw(renderer, rectangle);
 
-    SDL_RenderPresent(renderer);
+    SDL_Delay(DELAY / 4);
+
+    prepare(renderer);
+
+
+    rectangle.x = 100;
+    rectangle.y = 100;
+
+    
+    draw(renderer, rectangle);
+
+
+    // ^ present our changes
 
     SDL_Delay(DELAY);
     SDL_DestroyWindow(window);
