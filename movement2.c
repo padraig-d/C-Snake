@@ -41,8 +41,6 @@ int main(int argc, char **argv) {
     prepare(renderer);
     SDL_RenderPresent(renderer);
 
-    
-
     SDL_Delay(DELAY / 4);
 
     SDL_Rect rectangle = {
@@ -64,7 +62,6 @@ int main(int argc, char **argv) {
 
     
     draw(renderer, rectangle);
-
 
     // ^ present our changes
 
