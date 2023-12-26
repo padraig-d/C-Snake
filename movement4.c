@@ -34,9 +34,7 @@ int main(int argc, char **argv) {
     };
     
     draw(renderer, &rectangle);
-    
 
-    
     while (1) {
         SDL_Event event;
         while(SDL_PollEvent(&event)) {
@@ -48,17 +46,13 @@ int main(int argc, char **argv) {
                 SDL_Keycode current = event.key.keysym.sym;          
             
                 while (checker == 0) {
-                    
                     moveRectangle(&rectangle, current, window); // Should work
                     checkDirectionChange(&checker); // BIG WIP
                                                 // TOOD: Only change checker if direction key
-                       
                     prepare(renderer);
                     draw(renderer, &rectangle);
-                    SDL_Delay(100);
                     
-                    
-                    
+                    SDL_Delay(DELAY);
 
                 } 
             }
