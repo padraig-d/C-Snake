@@ -26,43 +26,54 @@ int main(int argc, char **argv) {
     prepare(renderer);
     SDL_RenderPresent(renderer);
 
-    SDL_Rect rectangle = {
+    SDL_Rect startRect = {
         .x = 40,
         .y = 40,
         .w = SIZE,
         .h = SIZE,
     };
 
+    Snake snakeHead = {
+        .snake = &startRect,
+        .prev = NULL,
+    };
+
+
     SDL_Rect pickup = {
-        .x = 200,
-        .y = 200,
+        .x = -50,
+        .y = -50,
         .w = SIZE,
         .h = SIZE,
     };
     
-    draw(renderer, &rectangle);
-
+    addPiece(&snakeHead);
+    tester(&snakeHead);
     while (1) {
+       
         SDL_Event event;
-        while(SDL_PollEvent(&event)) {
-            
+
+        while(SDL_PollEvent(&event)) { // WITHIN THIS WHILE LOOP. ACCESSING LINKEDLIST
+                                       // IS BROKEN FOR SOME UNGODLY REASON
+
             int checker = 0;
+            
             if (event.type == SDL_QUIT) { SDL_Quit(); return 0; }
             
             if (event.type == SDL_KEYDOWN) {
                 SDL_Keycode current = event.key.keysym.sym;          
-            
+                
                 while (checker == 0) {
-                    moveRectangle(&rectangle, current, window, &checker);
+                    // movement code
+                    moveSnake(&snakeHead, current, window, &checker);
                     checkDirectionChange(&checker); 
-
                     if (checker == 2) { SDL_Quit(); return 0; }
                     
 
+                    // rendering code
                     prepare(renderer);
-                    draw(renderer, &rectangle);
-                    
+                    draw(renderer, &snakeHead, &pickup);
                     SDL_Delay(DELAY);
+                    //tester(&snakeHead);
 
                 } 
             }
