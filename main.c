@@ -28,6 +28,11 @@ int main(int argc, char **argv) {
     prepare(renderer);
     SDL_RenderPresent(renderer);
 
+    Global global = {
+        .check = 0,
+        .quit = 0,
+    };
+
     SDL_Rect startRect = {
         .x = 40,
         .y = 40,
@@ -40,7 +45,6 @@ int main(int argc, char **argv) {
         .prev = NULL,
     };
 
-
     SDL_Rect pickup = {
         .x = -60,
         .y = -60,
@@ -48,47 +52,50 @@ int main(int argc, char **argv) {
         .h = SIZE,
     };
 
-    int quit = 0;
-    while (!quit) {
+    while (!global.quit) {
 
         SDL_Event event;
-
         while(SDL_PollEvent(&event)) { 
 
-            int checker = 0;
+            if (event.type == SDL_QUIT) { global.quit = 1; }
+            if (event.key.keysym.sym == SDLK_q) { global.quit = 1; }
             
-            if (event.type == SDL_QUIT) { SDL_Quit(); return 0; }
-            
+            global.check = 0;
+
             if (event.type == SDL_KEYDOWN) {
                 SDL_Keycode current = event.key.keysym.sym;          
                 
-                while (checker == 0) {
+                while (!global.check && global.quit == 0) {
                     // movement code
-                    moveSnake(&snakeHead, current, window, &checker);
-                    checkDirectionChange(&checker); 
+                    moveSnake(&snakeHead, current, window, &global);
+                    checkDirectionChange(&global); 
 
-                    
                     // game logic
                     Spawner(&pickup, &snakeHead);
                     Eat(&pickup, &snakeHead);
-                    BorderCheck(&snakeHead, &checker);
-                    CollisonCheck(&snakeHead, &checker);
-
-                    
-                    // hackycode lol
-                    if (checker == 2) { SDL_Quit(); return 0; }
+                    BorderCheck(&snakeHead, &global);
+                    CollisonCheck(&snakeHead, &global);
 
                     // rendering code
                     prepare(renderer);
                     draw(renderer, &snakeHead, &pickup);
                     SDL_Delay(DELAY);
                     
-
                 } 
             }
-
         }
+    }
 
+    // quitting logic
+
+    if (global.check == 1 && global.quit == 1) {
+        SDL_Delay(1000);
+        SDL_Quit();
+        return 0;
+    }
+    else if (global.quit == 1) {
+        SDL_Quit();
+        return 0;
     }
 
 }

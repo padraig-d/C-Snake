@@ -11,6 +11,13 @@ struct Snake {
     Snake* prev;
 };
 
+typedef struct Global Global;
+
+struct Global {
+    int check;
+    int quit;
+};
+
 void addPiece(Snake* snakeHead) {
 
     Snake* p = snakeHead;
@@ -34,7 +41,6 @@ void addPiece(Snake* snakeHead) {
 
 }
 
-
 void prepare(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, 30, 30, 30, 255); 
     // ^ fills the next line of code with what needs to be rendered.
@@ -47,10 +53,10 @@ void prepare(SDL_Renderer* renderer) {
 void draw(SDL_Renderer* renderer, Snake* head, SDL_Rect* pickup) {
     
     Snake* p = head;
-    SDL_SetRenderDrawColor( renderer, 255, 255, 255, 0xFF );
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0xFF);
     
     while (p != NULL) {
-        SDL_RenderFillRect( renderer, &(p->snake));
+        SDL_RenderFillRect(renderer, &(p->snake));
         p = p->prev;
     }
     
@@ -59,7 +65,7 @@ void draw(SDL_Renderer* renderer, Snake* head, SDL_Rect* pickup) {
     
 }
 
-int moveSnake(Snake* head, SDL_KeyCode current, SDL_Window* window, int* checker) {
+int moveSnake(Snake* head, SDL_KeyCode current, SDL_Window* window, Global* global) {
      
     Snake* p = head;
     int currentX, currentY;
@@ -70,7 +76,6 @@ int moveSnake(Snake* head, SDL_KeyCode current, SDL_Window* window, int* checker
 
 
     switch (current) {                      
-        case SDLK_q: SDL_DestroyWindow(window); *checker = 2; break;
         case SDLK_RIGHT: head->snake.x += SPEED; break;
         case SDLK_LEFT: head->snake.x -= SPEED; break;
         case SDLK_UP: head->snake.y -= SPEED; break;
@@ -96,20 +101,19 @@ int moveSnake(Snake* head, SDL_KeyCode current, SDL_Window* window, int* checker
     
 }
 
-void checkDirectionChange(int* checker) { 
+void checkDirectionChange(Global* global) { 
+    
     SDL_Event func_event;
     while(SDL_PollEvent(&func_event)) {
-        
-        if (func_event.type == SDL_QUIT) { *checker = 2; break; }
         
         if (func_event.type == SDL_KEYDOWN && func_event.key.repeat == 0) {
             
             SDL_Keycode current = func_event.key.keysym.sym;
             
-            if (current == SDLK_q) { *checker = 2; break; }
+            if (current == SDLK_q) { global->quit = 1; break; }
             else if (current == SDLK_RIGHT || current == SDLK_LEFT ||  current == SDLK_UP || current == SDLK_DOWN)  {
                 SDL_PushEvent(&func_event);
-                *checker = 1;
+                global->check = 1;
                 break;
             }
         }
@@ -144,7 +148,7 @@ void Eat(SDL_Rect* pickup, Snake* snakeHead) {
 
 }
 
-void CollisonCheck(Snake* snakeHead, int* checker) {
+void CollisonCheck(Snake* snakeHead, Global* global) {
     Snake* p = snakeHead->prev;
     int x = snakeHead->snake.x;
     int y = snakeHead->snake.y;
@@ -153,7 +157,8 @@ void CollisonCheck(Snake* snakeHead, int* checker) {
         
         if ((p->snake.x == x) && (p->snake.y == y)) {
             SDL_Log("Ate yourself!");
-            *checker = 2;
+            global->check = 1;
+            global->quit = 1;
             break; 
         }
 
@@ -163,10 +168,11 @@ void CollisonCheck(Snake* snakeHead, int* checker) {
 
 }
 
-void BorderCheck(Snake* snakeHead, int* checker) {
+void BorderCheck(Snake* snakeHead, Global* global) {
     if (snakeHead->snake.x == WIDTH || snakeHead->snake.y == HEIGHT || snakeHead->snake.x == -20 || snakeHead->snake.y == -20 ) {
         SDL_Log("Ran into wall!");
-        *checker = 2;
+        global->check = 1;
+        global->quit = 1;
     }
 }
 
@@ -182,17 +188,6 @@ void Tester(Snake* head) {
     }
 }
 
-int Quitter() {
-    // another day
-}
 
-
-
-
-// BUG-FIXES
-// 1. get the functions to return 0 when SDL_Quit()
-//    --- do it nicer than the hack job of checking for checker = 2 lol
-
-// TODO
-// 2. Pickup and collision.
-// 3. Border checking. 
+// V2
+// 1. Implement timing.
