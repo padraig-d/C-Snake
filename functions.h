@@ -164,7 +164,7 @@ void CollisonCheck(Snake* snakeHead, int* checker) {
 }
 
 void BorderCheck(Snake* snakeHead, int* checker) {
-    if (snakeHead->snake.x == WIDTH || snakeHead->snake.y == HEIGHT || snakeHead->snake.x == 0 || snakeHead->snake.y == 0 ) {
+    if (snakeHead->snake.x == WIDTH || snakeHead->snake.y == HEIGHT || snakeHead->snake.x == -20 || snakeHead->snake.y == -20 ) {
         SDL_Log("Ran into wall!");
         *checker = 2;
     }
