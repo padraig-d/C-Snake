@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include <SDL2/SDL.h>
 #include "functions.h"
 #include "macros.h"
@@ -8,7 +10,7 @@ int main(int argc, char **argv) {
     int initalised = SDL_Init(SDL_INIT_VIDEO);
 
     SDL_Window* window = NULL;
-    window = SDL_CreateWindow("Hellowo World",
+    window = SDL_CreateWindow("Python",
                             SDL_WINDOWPOS_UNDEFINED,
                             SDL_WINDOWPOS_UNDEFINED,
                             WIDTH,
@@ -34,26 +36,24 @@ int main(int argc, char **argv) {
     };
 
     Snake snakeHead = {
-        .snake = &startRect,
+        .snake = startRect,
         .prev = NULL,
     };
 
 
     SDL_Rect pickup = {
-        .x = -50,
-        .y = -50,
+        .x = -60,
+        .y = -60,
         .w = SIZE,
         .h = SIZE,
     };
-    
-    addPiece(&snakeHead);
-    tester(&snakeHead);
-    while (1) {
-       
+
+    int quit = 0;
+    while (!quit) {
+
         SDL_Event event;
 
-        while(SDL_PollEvent(&event)) { // WITHIN THIS WHILE LOOP. ACCESSING LINKEDLIST
-                                       // IS BROKEN FOR SOME UNGODLY REASON
+        while(SDL_PollEvent(&event)) { 
 
             int checker = 0;
             
@@ -66,14 +66,23 @@ int main(int argc, char **argv) {
                     // movement code
                     moveSnake(&snakeHead, current, window, &checker);
                     checkDirectionChange(&checker); 
-                    if (checker == 2) { SDL_Quit(); return 0; }
+
                     
+                    // game logic
+                    Spawner(&pickup, &snakeHead);
+                    Eat(&pickup, &snakeHead);
+                    BorderCheck(&snakeHead, &checker);
+                    CollisonCheck(&snakeHead, &checker);
+
+                    
+                    // hackycode lol
+                    if (checker == 2) { SDL_Quit(); return 0; }
 
                     // rendering code
                     prepare(renderer);
                     draw(renderer, &snakeHead, &pickup);
                     SDL_Delay(DELAY);
-                    //tester(&snakeHead);
+                    
 
                 } 
             }
