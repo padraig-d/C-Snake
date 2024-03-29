@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <SDL2/SDL.h>
-#include "functions.h"
 #include "macros.h"
 
 int main(int argc, char **argv) {

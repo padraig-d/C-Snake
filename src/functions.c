@@ -4,19 +4,6 @@
 #include <SDL2/SDL.h>
 #include "macros.h"
 
-typedef struct Snake Snake;
-
-struct Snake {
-    SDL_Rect snake;
-    Snake* prev;
-};
-
-typedef struct Global Global;
-
-struct Global {
-    int check;
-    int quit;
-};
 
 void addPiece(Snake* snakeHead) {
 
@@ -187,7 +174,3 @@ void Tester(Snake* head) {
         i += 1;
     }
 }
-
-
-// V2
-// 1. Implement timing.
