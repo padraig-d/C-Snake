@@ -8,4 +8,5 @@ SDL2, install on Debian-based systems using `` sudo apt-get install libsdl2-2.0-
 
 Compile the file using ``make``
 Run the binary from the bin directory.
+
 Begin game by pressing an arrow key.
