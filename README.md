@@ -6,6 +6,11 @@ SDL2, install on Debian-based systems using `` sudo apt-get install libsdl2-2.0-
 
 # **Instructions**
 
+Install SDL2 locally by navigating to ..lib/SDL/build.
+Run "make" to compile SDL.
+Run "make install" to install your new SDL build onto the system.
+
+
 Compile the file using ``make``
 Run the binary from the bin directory.
 
