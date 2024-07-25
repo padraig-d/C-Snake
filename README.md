@@ -15,3 +15,6 @@ Compile the file using ``make``
 Run the binary from the bin directory.
 
 Begin game by pressing an arrow key.
+
+![image](https://github.com/user-attachments/assets/97c6ac03-e890-42de-aa4e-276eb3f7a70e)
+
